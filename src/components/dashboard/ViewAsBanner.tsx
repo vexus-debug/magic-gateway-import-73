@@ -1,11 +1,12 @@
 import { Eye, ArrowLeft } from "lucide-react";
+import { getStaffRoles, getRoleLabel } from "@/config/roleAccess";
 import { useOrg } from "@/hooks/useOrg";
 import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const ROLES = [
+const CLINIC_ROLES = [
   { value: "manager", label: "Manager" },
   { value: "dentist", label: "Dentist" },
   { value: "receptionist", label: "Receptionist" },
@@ -17,8 +18,12 @@ const ROLES = [
 ];
 
 export function ViewAsBanner() {
-  const { realRole, viewAsRole, setViewAsRole } = useOrg();
+  const { realRole, viewAsRole, setViewAsRole, currentOrg } = useOrg();
   if (realRole !== "owner" && realRole !== "admin") return null;
+  const clinicType = currentOrg?.clinic_type as string | undefined;
+  const ROLES = clinicType === "dental_lab"
+    ? ["manager", ...getStaffRoles(clinicType)].map((v) => ({ value: v, label: v === "manager" ? "Manager" : getRoleLabel(v, clinicType) }))
+    : CLINIC_ROLES;
 
   const label = ROLES.find((r) => r.value === viewAsRole)?.label ?? viewAsRole;
 

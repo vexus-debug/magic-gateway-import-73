@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getStaffRoles, getRoleLabel } from "@/config/roleAccess";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +13,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
 
-const baseRoles = ["dentist", "assistant", "hygienist", "receptionist", "accountant", "lab_technician", "lab_assistant", "nurse", "procurement_officer"];
 
 interface AddStaffDialogProps {
   open: boolean;
@@ -28,8 +28,12 @@ export function AddStaffDialog({ open, onOpenChange }: AddStaffDialogProps) {
   // Managers can never appoint admins; owners, admins and super admins can
   const canAppointAdmin = isSuper || myRole === "owner" || myRole === "admin";
   const canAppointManager = canAppointAdmin;
-  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...baseRoles];
-  const [form, setForm] = useState({ full_name: "", role: "dentist", phone: "", email: "", specialty: "" });
+  const clinicType = currentOrg?.clinic_type as string | undefined;
+  const isLab = clinicType === "dental_lab";
+  const defaultRole = isLab ? "lab_technician" : "dentist";
+  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...getStaffRoles(clinicType)];
+  const [form, setForm] = useState({ full_name: "", role: defaultRole, phone: "", email: "", specialty: "" });
+  useEffect(() => { if (open && !roles.includes(form.role)) setForm((f) => ({ ...f, role: defaultRole })); }, [open, isLab]);
   const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -78,7 +82,7 @@ export function AddStaffDialog({ open, onOpenChange }: AddStaffDialogProps) {
       }
 
       onOpenChange(false);
-      setForm({ full_name: "", role: "dentist", phone: "", email: "", specialty: "" });
+      setForm({ full_name: "", role: defaultRole, phone: "", email: "", specialty: "" });
       setPassword("");
       setCreateAccount(false);
     } catch (error: any) {
@@ -96,7 +100,7 @@ export function AddStaffDialog({ open, onOpenChange }: AddStaffDialogProps) {
             <UserPlus className="h-5 w-5 text-secondary" />
             Add Staff Member
           </DialogTitle>
-          <DialogDescription>Add a new team member to your clinic.</DialogDescription>
+          <DialogDescription>Add a new team member to your {isLab ? "dental lab" : "clinic"}.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div className="space-y-1">
@@ -109,13 +113,13 @@ export function AddStaffDialog({ open, onOpenChange }: AddStaffDialogProps) {
               <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {roles.map((r) => <SelectItem key={r} value={r} className="capitalize">{r.replace(/_/g, " ")}</SelectItem>)}
+                  {roles.map((r) => <SelectItem key={r} value={r} >{getRoleLabel(r, clinicType)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
               <Label className="text-xs">Specialty</Label>
-              <Input value={form.specialty} onChange={(e) => setForm({ ...form, specialty: e.target.value })} placeholder="e.g. Orthodontics" />
+              <Input value={form.specialty} onChange={(e) => setForm({ ...form, specialty: e.target.value })} placeholder={isLab ? "e.g. CAD/CAM, Ceramics" : "e.g. Orthodontics"} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
