@@ -302,6 +302,7 @@ const dentalLabNav: NavGroup[] = [
   { label: "Clients & Money", items: [
     { title: "Clients", path: "dlab/clients", icon: Users },
     { title: "Client Prices", path: "dlab/r/client-prices", icon: DollarSign },
+    { title: "Invoices", path: "dlab/invoices", icon: Receipt },
     { title: "Statements", path: "dlab/statements", icon: FileText },
     { title: "Payments Received", path: "dlab/r/client-payments", icon: Wallet },
     { title: "Credit Notes", path: "dlab/r/credit-notes", icon: Receipt },
