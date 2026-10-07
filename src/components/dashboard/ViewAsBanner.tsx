@@ -1,11 +1,12 @@
 import { Eye, ArrowLeft } from "lucide-react";
+import { getStaffRoles, getRoleLabel } from "@/config/roleAccess";
 import { useOrg } from "@/hooks/useOrg";
 import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const ROLES = [
+const CLINIC_ROLES = [
   { value: "manager", label: "Manager" },
   { value: "dentist", label: "Dentist" },
   { value: "receptionist", label: "Receptionist" },
