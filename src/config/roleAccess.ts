@@ -204,6 +204,14 @@ const DLAB_ROLE_LABELS: Record<string, string> = {
   accountant: "Accounts",
 };
 
+const CLINIC_STAFF_ROLES = ["dentist", "assistant", "hygienist", "receptionist", "accountant", "lab_technician", "lab_assistant", "nurse", "procurement_officer"];
+const DLAB_STAFF_ROLES = ["lab_technician", "lab_assistant", "dentist", "receptionist", "accountant"];
+
+/** Roles that can be assigned to staff for a given clinic type (excluding admin/manager). */
+export function getStaffRoles(clinicType?: string): string[] {
+  return clinicType === "dental_lab" ? DLAB_STAFF_ROLES : CLINIC_STAFF_ROLES;
+}
+
 export function getRoleLabel(role: string, clinicType?: string): string {
   if (clinicType === "eye" && EYE_ROLE_LABELS[role]) return EYE_ROLE_LABELS[role];
   if (clinicType === "dental_lab" && DLAB_ROLE_LABELS[role]) return DLAB_ROLE_LABELS[role];

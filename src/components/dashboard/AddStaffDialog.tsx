@@ -28,8 +28,12 @@ export function AddStaffDialog({ open, onOpenChange }: AddStaffDialogProps) {
   // Managers can never appoint admins; owners, admins and super admins can
   const canAppointAdmin = isSuper || myRole === "owner" || myRole === "admin";
   const canAppointManager = canAppointAdmin;
-  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...baseRoles];
-  const [form, setForm] = useState({ full_name: "", role: "dentist", phone: "", email: "", specialty: "" });
+  const clinicType = currentOrg?.clinic_type as string | undefined;
+  const isLab = clinicType === "dental_lab";
+  const defaultRole = isLab ? "lab_technician" : "dentist";
+  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...getStaffRoles(clinicType)];
+  const [form, setForm] = useState({ full_name: "", role: defaultRole, phone: "", email: "", specialty: "" });
+  useEffect(() => { if (open && !roles.includes(form.role)) setForm((f) => ({ ...f, role: defaultRole })); }, [open, isLab]);
   const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

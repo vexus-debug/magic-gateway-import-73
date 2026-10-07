@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getStaffRoles, getRoleLabel } from "@/config/roleAccess";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, KeyRound } from "lucide-react";
 
-const baseRoles = ["dentist", "assistant", "hygienist", "receptionist", "accountant", "lab_technician", "lab_assistant", "nurse", "procurement_officer"];
 
 interface EditStaffDialogProps {
   staff: StaffMember | null;
@@ -29,7 +29,7 @@ export function EditStaffDialog({ staff, open, onOpenChange }: EditStaffDialogPr
   const canAppointAdmin = isSuper || myRole === "owner" || myRole === "admin";
   const canAppointManager = canAppointAdmin;
   const canEditLogin = isSuper || ["owner", "admin", "manager"].includes(myRole || "");
-  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...baseRoles];
+  const roles = [...(canAppointAdmin ? ["admin"] : []), ...(canAppointManager ? ["manager"] : []), ...getStaffRoles(currentOrg?.clinic_type as string | undefined)];
   const [form, setForm] = useState({ full_name: "", role: "dentist", phone: "", email: "", specialty: "", status: "active" });
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -130,7 +130,7 @@ export function EditStaffDialog({ staff, open, onOpenChange }: EditStaffDialogPr
               <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {(roles.includes(form.role) ? roles : [form.role, ...roles]).map((r) => <SelectItem key={r} value={r} className="capitalize">{r.replace(/_/g, " ")}</SelectItem>)}
+                  {(roles.includes(form.role) ? roles : [form.role, ...roles]).map((r) => <SelectItem key={r} value={r} >{getRoleLabel(r, currentOrg?.clinic_type as string | undefined)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
