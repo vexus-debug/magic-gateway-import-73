@@ -86,6 +86,7 @@ import LabRegisterPage from "./pages/dashboard/dlab/LabRegisterPage";
 import DlabCasesPage from "./pages/dashboard/dlab/DlabCasesPage";
 import DlabCalendarPage from "./pages/dashboard/dlab/DlabCalendarPage";
 import DlabClientsPage from "./pages/dashboard/dlab/DlabClientsPage";
+import DlabInvoicesPage from "./pages/dashboard/dlab/DlabInvoicesPage";
 import DlabStatementsPage from "./pages/dashboard/dlab/DlabStatementsPage";
 import DlabReportsPage from "./pages/dashboard/dlab/DlabReportsPage";
 // Diagnostic centre — laboratory
@@ -332,6 +333,7 @@ const App = () => (
               <Route path="dlab/cases" element={<DlabCasesPage />} />
               <Route path="dlab/calendar" element={<DlabCalendarPage />} />
               <Route path="dlab/clients" element={<DlabClientsPage />} />
+              <Route path="dlab/invoices" element={<DlabInvoicesPage />} />
               <Route path="dlab/statements" element={<DlabStatementsPage />} />
               <Route path="dlab/reports" element={<DlabReportsPage />} />
               <Route path="dlab/r/:kind" element={<LabRegisterPage />} />

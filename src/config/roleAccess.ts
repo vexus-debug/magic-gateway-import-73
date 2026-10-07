@@ -146,6 +146,7 @@ export const DLAB_PAGE_ROLE_ACCESS: Record<string, OrgRole[]> = {
   "dlab/r/shades": [...TECH, ...LEAD],
   "dlab/clients": [...INTAKE, ...ACCTS, ...LEAD],
   "dlab/r/client-prices": [...ACCTS, ...LEAD],
+  "dlab/invoices": [...ACCTS, ...LEAD],
   "dlab/statements": ACCTS,
   "dlab/r/client-payments": ACCTS,
   "dlab/r/credit-notes": ACCTS,
