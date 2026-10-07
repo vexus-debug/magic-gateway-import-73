@@ -17,8 +17,12 @@ const ROLES = [
 ];
 
 export function ViewAsBanner() {
-  const { realRole, viewAsRole, setViewAsRole } = useOrg();
+  const { realRole, viewAsRole, setViewAsRole, currentOrg } = useOrg();
   if (realRole !== "owner" && realRole !== "admin") return null;
+  const clinicType = currentOrg?.clinic_type as string | undefined;
+  const ROLES = clinicType === "dental_lab"
+    ? ["manager", ...getStaffRoles(clinicType)].map((v) => ({ value: v, label: v === "manager" ? "Manager" : getRoleLabel(v, clinicType) }))
+    : CLINIC_ROLES;
 
   const label = ROLES.find((r) => r.value === viewAsRole)?.label ?? viewAsRole;
 
