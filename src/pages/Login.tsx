@@ -5,6 +5,7 @@ import {
   ChevronDown,
   Eye,
   EyeOff,
+  FlaskConical,
   Lock,
   Mail,
   Microscope,
@@ -30,6 +31,7 @@ const DEMO_CLINICS = [
   { label: "Dental Clinic Demo", icon: Stethoscope, slug: "demo", email: "demo@clinexus.com.ng", password: "Thepassword@48" },
   { label: "Eye Clinic Demo", icon: Eye, slug: "eye", email: "demo@clinexus.com.ng", password: "Thepassword@48" },
   { label: "Diagnostic Centre Demo", icon: Microscope, slug: "diagnostic-demo", email: "demo@clinexus.com.ng", password: "Thepassword@48" },
+  { label: "Dental Lab Demo", icon: FlaskConical, slug: "dental-lab", email: "demo@clinexus.com.ng", password: "Thepassword@48" },
 ];
 
 export default function Login() {
